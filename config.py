@@ -64,7 +64,7 @@ MESSAGES = {
     "FSUB_PHOTO": "https://telegra.ph/file/7a16ef7abae23bd238c82-b8fbdcb05422d71974.jpg",
     "SHORT_PIC": "https://telegra.ph/file/7a16ef7abae23bd238c82-b8fbdcb05422d71974.jpg",
     "SHORT": "https://telegra.ph/file/8aaf4df8c138c6685dcee-05d3b183d4978ec347.jpg",
-    "TRIAL_USED": "<b>⚠️ {first}, you've already used your free trial for this batch!</b>\n\nEach batch link can only be opened once per account. Grab premium below to keep getting access 👇"
+    "TRIAL_USED": "<b>⚠️ {first}, aapne apna free trial ek baar use kar liya hai!</b>\n\nIs batch link se dobara file nahi milegi. Agar aur dekhna hai to niche premium le lo 👇"
 }
 
 def LOGGER(name: str, client_name: str) -> logging.Logger:
