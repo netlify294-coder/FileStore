@@ -38,6 +38,11 @@ ADMINS = [6497757690, 6103092779]
 DISABLE_BTN = True
 PROTECT = True
 
+# One-time batch (free trial) access button — shown when a user re-opens
+# a batch link they've already used once
+TRIAL_BTN_TEXT = "💎 Get Premium"
+TRIAL_BTN_URL = "https://t.me/your_channel_or_bot"
+
 # Messages Configuration
 MESSAGES = {
     "START": "<b>›› ʜᴇʏ!!, {first} ~ <blockquote>ʟᴏᴠᴇ ᴘᴏʀɴʜᴡᴀ? ɪ ᴀᴍ ᴍᴀᴅᴇ ᴛᴏ ʜᴇʟᴘ ʏᴏᴜ ᴛᴏ ғɪɴᴅ ᴡʜᴀᴛ ʏᴏᴜ aʀᴇ ʟᴏᴏᴋɪɴɢ ꜰᴏʀ.</blockquote></b>",
@@ -48,7 +53,8 @@ MESSAGES = {
     "START_PHOTO": "https://graph.org/file/510affa3d4b6c911c12e3.jpg",
     "FSUB_PHOTO": "https://telegra.ph/file/7a16ef7abae23bd238c82-b8fbdcb05422d71974.jpg",
     "SHORT_PIC": "https://telegra.ph/file/7a16ef7abae23bd238c82-b8fbdcb05422d71974.jpg",
-    "SHORT": "https://telegra.ph/file/8aaf4df8c138c6685dcee-05d3b183d4978ec347.jpg"
+    "SHORT": "https://telegra.ph/file/8aaf4df8c138c6685dcee-05d3b183d4978ec347.jpg",
+    "TRIAL_USED": "<b>⚠️ {first}, you've already used your free trial for this batch!</b>\n\nEach batch link can only be opened once per account. Grab premium below to keep getting access 👇"
 }
 
 def LOGGER(name: str, client_name: str) -> logging.Logger:
