@@ -2,7 +2,7 @@ from helper.helper_func import *
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 import humanize
-from config import MSG_EFFECT, OWNER_ID
+from config import MSG_EFFECT, OWNER_ID, TRIAL_BTN_TEXT, TRIAL_BTN_URL
 from plugins.shortner import get_short
 from helper.helper_func import get_messages, force_sub, decode, batch_auto_del_notification
 import asyncio
@@ -160,6 +160,20 @@ async def start_command(client: Client, message: Message):
             client.LOGGER(__name__, client.name).warning(f"Error decoding base64: {e}")
             return await message.reply("⚠️ Invalid or expired link.")
 
+        is_batch = len(argument) == 3
+
+        # 6.5 One-time batch access gate — each batch link works only once per user
+        if is_batch:
+            already_used = await client.mongodb.has_used_batch(user_id, original_payload)
+            if already_used:
+                trial_msg = client.messages.get(
+                    'TRIAL_USED',
+                    "⚠️ {first}, you've already used your free trial for this batch!"
+                ).format(first=message.from_user.first_name)
+                buttons = [[InlineKeyboardButton(TRIAL_BTN_TEXT, url=TRIAL_BTN_URL)]]
+                await message.reply(trial_msg, reply_markup=InlineKeyboardMarkup(buttons))
+                return
+
         # 7. Get messages from the specific source channel first
         temp_msg = await message.reply("Wait A Sec..")
         messages = []
@@ -234,6 +248,10 @@ async def start_command(client: Client, message: Message):
             except Exception as e:
                 client.LOGGER(__name__, client.name).warning(f"Failed to send message: {e}")
                 pass
+
+        # Record this batch link as used for this user (one-time trial)
+        if is_batch and yugen_msgs:
+            await client.mongodb.mark_batch_used(user_id, original_payload)
 
         # 8. Auto delete timer
         if messages and client.auto_del > 0:
