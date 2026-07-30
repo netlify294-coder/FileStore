@@ -14,6 +14,7 @@ class MongoDB:
             instance.premium_users = instance.db['pros']
             instance.fsub_status = instance.db['fsub_status']  # New collection for fsub status tracking
             instance.request_sub = instance.db['request_sub']  # New collection for join request tracking
+            instance.batch_access = instance.db['batch_access']  # Tracks one-time batch link access per user
             cls._instances[(uri, db_name)] = instance
         return cls._instances[(uri, db_name)]
 
@@ -83,6 +84,24 @@ class MongoDB:
         if doc['expiry_date'] is None:
             return True  # Permanent premium users
         return doc['expiry_date'] > datetime.now()
+
+    # ✅ BATCH TRIAL TRACKING (one-time access per user per batch link)
+
+    async def has_used_batch(self, user_id: int, payload: str) -> bool:
+        doc = await self.batch_access.find_one({'_id': f"{user_id}:{payload}"})
+        return doc is not None
+
+    async def mark_batch_used(self, user_id: int, payload: str) -> bool:
+        try:
+            await self.batch_access.update_one(
+                {'_id': f"{user_id}:{payload}"},
+                {'$set': {'user_id': user_id, 'payload': payload, 'used_at': datetime.now()}},
+                upsert=True
+            )
+            return True
+        except Exception as e:
+            print(f"Failed to mark batch used: {e}")
+            return False
 
     async def get_pros_list(self):
         current_time = datetime.now()
