@@ -1,47 +1,57 @@
+import os
+import json
 import logging
 from logging.handlers import RotatingFileHandler
 
 # Bot Configuration
 LOG_FILE_NAME = "bot.log"
-PORT = '5010'
-OWNER_ID = 6497757690
+PORT = os.getenv("PORT", "5010")
+OWNER_ID = int(os.getenv("OWNER_ID", "6497757690"))
 
-MSG_EFFECT = 5046509860389126442
+MSG_EFFECT = int(os.getenv("MSG_EFFECT", "5046509860389126442"))
 
-SHORT_URL = "linkshortify.com" # shortner url 
-SHORT_API = "" 
-SHORT_TUT = "https://t.me/How_to_Download_7x/26"
+SHORT_URL = os.getenv("SHORT_URL", "linkshortify.com")  # shortner url
+SHORT_API = os.getenv("SHORT_API", "")
+SHORT_TUT = os.getenv("SHORT_TUT", "https://t.me/How_to_Download_7x/26")
 
 # Bot Configuration
-SESSION = "yato"
-TOKEN = "642712"
-API_ID = ""
-API_HASH = ""
-WORKERS = 5
+SESSION = os.getenv("SESSION", "yato")
+TOKEN = os.getenv("TOKEN", "")
+API_ID = os.getenv("API_ID", "")
+API_HASH = os.getenv("API_HASH", "")
+WORKERS = int(os.getenv("WORKERS", "5"))
 
-DB_URI = "mongodb"
-DB_NAME = "yato"
+DB_URI = os.getenv("DB_URI", "")
+DB_NAME = os.getenv("DB_NAME", "yato")
 
-FSUBS = [[-1003016571084, True, 10]] # Force Subscription Channels [channel_id, request_enabled, timer_in_minutes]
-# Database Channel (Primary)
-DB_CHANNEL =    # just put channel id dont add ""
+# Force Subscription Channels [channel_id, request_enabled, timer_in_minutes]
+# Set as JSON in the FSUBS env var, e.g. [[-1001234567890, true, 10]]
+# Leave unset (or "[]") to disable force-subscribe.
+FSUBS = json.loads(os.getenv("FSUBS", "[]"))
+
+# Database Channel (Primary) — the private channel the bot stores files in
+DB_CHANNEL = int(os.getenv("DB_CHANNEL", "0"))
+
 # Multiple Database Channels (can be set via bot settings)
 # DB_CHANNELS = {
 #     "-1002595092736": {"name": "Primary DB", "is_primary": True, "is_active": True},
 #     "-1001234567890": {"name": "Secondary DB", "is_primary": False, "is_active": True}
 # }
+
 # Auto Delete Timer (seconds)
-AUTO_DEL = 300
-# Admin IDs
-ADMINS = [6497757690, 6103092779]
+AUTO_DEL = int(os.getenv("AUTO_DEL", "300"))
+
+# Admin IDs — comma-separated in the ADMINS env var, e.g. "6123456789,9876543210"
+ADMINS = [int(x) for x in os.getenv("ADMINS", "").split(",") if x.strip()]
+
 # Bot Settings
-DISABLE_BTN = True
-PROTECT = True
+DISABLE_BTN = os.getenv("DISABLE_BTN", "True") == "True"
+PROTECT = os.getenv("PROTECT", "True") == "True"
 
 # One-time batch (free trial) access button — shown when a user re-opens
 # a batch link they've already used once
-TRIAL_BTN_TEXT = "💎 Get Premium"
-TRIAL_BTN_URL = "https://t.me/your_channel_or_bot"
+TRIAL_BTN_TEXT = os.getenv("TRIAL_BTN_TEXT", "💎 Get Premium")
+TRIAL_BTN_URL = os.getenv("TRIAL_BTN_URL", "https://t.me/your_channel_or_bot")
 
 # Messages Configuration
 MESSAGES = {
