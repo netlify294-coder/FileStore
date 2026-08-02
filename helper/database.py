@@ -201,6 +201,24 @@ class MongoDB:
         """Set shortner on/off status"""
         await self.update_shortner_setting('enabled', enabled)
 
+    # ✅ CUSTOM FILE BUTTON (shown below every file sent via batch/single links)
+
+    async def set_file_button_settings(self, data: dict):
+        await self.user_data.update_one(
+            {"_id": "file_button_settings"},
+            {"$set": {"settings": data}},
+            upsert=True
+        )
+
+    async def get_file_button_settings(self) -> dict:
+        data = await self.user_data.find_one({"_id": "file_button_settings"})
+        return data.get("settings", {}) if data else {}
+
+    async def update_file_button_setting(self, key: str, value: str):
+        current_data = await self.get_file_button_settings()
+        current_data[key] = value
+        await self.set_file_button_settings(current_data)
+
     # ✅ FSUB STATUS COLLECTION FUNCTIONS
 
     async def update_fsub_status(self, user_id: int, channel_id: int, status: str):
