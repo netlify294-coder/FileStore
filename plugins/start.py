@@ -214,6 +214,15 @@ async def start_command(client: Client, message: Message):
             )
             reply_markup = msg.reply_markup if not client.disable_btn else None
 
+            file_btn_text = getattr(client, 'file_btn_text', '')
+            file_btn_url = getattr(client, 'file_btn_url', '')
+            if file_btn_text and file_btn_url:
+                custom_row = [InlineKeyboardButton(file_btn_text, url=file_btn_url)]
+                if reply_markup and reply_markup.inline_keyboard:
+                    reply_markup = InlineKeyboardMarkup(list(reply_markup.inline_keyboard) + [custom_row])
+                else:
+                    reply_markup = InlineKeyboardMarkup([custom_row])
+
             try:
                 copied_msg = await msg.copy(
                     chat_id=message.from_user.id,
@@ -349,5 +358,5 @@ async def my_plan(client: Client, message: Message):
             "🔸 Plan: Free\n"
             "🔸 Request: Disabled\n\n"
             "🔓 Unlock Premium to get more benefits\n"
-            "Contact: @"
+            "Contact: @salesgodx"
         )
