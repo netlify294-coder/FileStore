@@ -1,3 +1,5 @@
+#(©) Codeflix_Bots
+
 from aiohttp import web
 from plugins import web_server
 
@@ -136,11 +138,22 @@ class Bot(Client):
             self.short_api = SHORT_API
             self.tutorial_link = SHORT_TUT
             self.shortner_enabled = True
+
+        # Load custom file button settings from database
+        try:
+            file_btn_settings = await self.mongodb.get_file_button_settings()
+            self.file_btn_text = file_btn_settings.get('text', '')
+            self.file_btn_url = file_btn_settings.get('url', '')
+        except Exception as e:
+            self.LOGGER(__name__, self.name).warning(f"Error loading file button settings: {e}")
+            self.file_btn_text = ''
+            self.file_btn_url = ''
+
         
         try:
             db_channel = await self.get_chat(self.db)
             self.db_channel = db_channel
-            test = await self.send_message(chat_id = db_channel.id, text = "Testing Message by ")
+            test = await self.send_message(chat_id = db_channel.id, text = "Testing Message by @salesgodx")
             await test.delete()
             
             # Log DB channels info
@@ -149,7 +162,7 @@ class Bot(Client):
         except Exception as e:
             self.LOGGER(__name__, self.name).warning(e)
             self.LOGGER(__name__, self.name).warning(f"Make Sure bot is Admin in DB Channel, and Double check the database channel Value, Current Value {self.db}")
-            self.LOGGER(__name__, self.name).info("\nBot Stopped. Join for support")
+            self.LOGGER(__name__, self.name).info("\nBot Stopped. Join https://t.me/animes_cruise for support")
             sys.exit()
         self.LOGGER(__name__, self.name).info("Bot Started!!")
         
@@ -172,4 +185,3 @@ async def web_app():
     await app.setup()
     bind_address = "0.0.0.0"
     await web.TCPSite(app, bind_address, PORT).start()
-    
